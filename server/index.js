@@ -5,7 +5,13 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 
+// Routes
 import AuthRoutes from './routes/AuthRoutes.js'
+import PrivateRoutes from './routes/PrivateRoutes.js'
+
+// middleware
+import { errorHandler } from './middleware/Error.js'
+import { authCheck } from './middleware/Auth.js'
 
 dotenv.config({path: "./config/config.env"})
 const app = express()
@@ -22,6 +28,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(morgan('dev'))
 app.use(cookieParser())
 app.use(cors({credentials: true, origin: true}))
+
 mongoose.connect(process.env.DB_URL, options)
         .catch((err) => console.log(err))
 
@@ -34,6 +41,10 @@ mongoose.connection.once('open', () => {
 })
 
 app.use('/api/auth', AuthRoutes)
+app.use('/api/private', authCheck, PrivateRoutes)
+
+// error handler (should be last be piece of middleware)
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
 const server = app.listen(PORT, () => {

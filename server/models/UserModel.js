@@ -1,8 +1,10 @@
 import mongoose from 'mongoose'
 import bcryptjs from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 const { Schema, model } = mongoose
-const { hash, genSalt } = bcryptjs
+const { hash, genSalt, compare } = bcryptjs
+const { sign } = jwt
 
 const userSchema = new Schema({
     username: {
@@ -50,6 +52,38 @@ userSchema.post('save', function(doc, next) {
     console.log(doc)
     next()
 })  
+
+// this has access to query object
+userSchema.static.login = async function(email, password){
+    try {
+        const user = await this.findOne({email}).select("+password")
+        
+        if (!user) {
+            throw new Error('User does not exists')
+        }
+
+        const isMatch = await compare(password, user.password)
+
+        if (isMatch) {
+            return user
+        } else {
+            throw new Error('Incorrect Password')
+        }
+
+    } catch (error) {
+        console.log(error.message)
+        return error.message
+    }
+}
+
+// this refers to the document
+userSchema.methods.matchPasswords = async function(password) {
+    return await compare(password, this.password)
+}
+
+userSchema.methods.getSignToken = function() {
+    return sign({id: this._id, username: this.username}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE})
+}
 
 const user = model('user', userSchema)
 export default user
