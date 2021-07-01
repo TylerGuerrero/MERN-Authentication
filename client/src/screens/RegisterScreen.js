@@ -54,7 +54,7 @@ const RegisterScreen = () => {
                 <h3 className="register-screen__title">Register</h3>
                 { error && <span className="error-message"> { error } </span>}
                 <div className="form-group">
-                    <label htmlFor="name">Username:</label>
+                    <label htmlFor="name">Username: </label>
                     <input 
                     id="name" 
                     type="text"
@@ -66,7 +66,7 @@ const RegisterScreen = () => {
                     />
                 </div>  
                 <div className="form-group">
-                    <label htmlFor="email">Email:</label>
+                    <label htmlFor="email">Email: </label>
                     <input 
                     id="email"
                     type="email"
@@ -78,7 +78,7 @@ const RegisterScreen = () => {
                     />
                 </div>  
                 <div className="form-group">
-                    <label htmlFor="password">Password:</label>
+                    <label htmlFor="password">Password: </label>
                     <input 
                     id="password"
                     name="password"
@@ -90,7 +90,7 @@ const RegisterScreen = () => {
                     />
                 </div>  
                 <div className="form-group">
-                    <label htmlFor="confirmPassword">Confirm Password:</label>
+                    <label htmlFor="confirmPassword">Confirm Password: </label>
                     <input
                     type="password"
                     id="confirmPassword"
