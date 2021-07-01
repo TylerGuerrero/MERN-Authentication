@@ -105,3 +105,8 @@ export const reset_password_put = async (req, res, next) => {
         return next(new ErrorResponse(error.message, 500))
     }
 }
+
+export const logout_get = (req, res) => {
+    res.cookie("jwt", "", {maxAge: 3})
+    return res.status(201).json({success: true, data: 'Logged Out'})
+}
