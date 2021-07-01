@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
 
 const { Schema, model } = mongoose
 const { hash, genSalt, compare } = bcryptjs
@@ -38,6 +39,10 @@ const userSchema = new Schema({
 // we use function to get access to this which refers to the document
 // function fires before document gets inserted to the database
 userSchema.pre('save', async function(next) {
+    if (!this.isModified("password")) {
+        next();
+    }
+
     try {
         const salt = await genSalt(12)
         this.password = await hash(this.password, salt)
@@ -49,7 +54,6 @@ userSchema.pre('save', async function(next) {
 
 // function fires after documnet gets saved to the database
 userSchema.post('save', function(doc, next) {
-    console.log(doc)
     next()
 })  
 
@@ -83,6 +87,13 @@ userSchema.methods.matchPasswords = async function(password) {
 
 userSchema.methods.getSignToken = function() {
     return sign({id: this._id, username: this.username}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE})
+}
+
+userSchema.methods.getResetPasswordToken = function() {
+    const resetToken = crypto.randomBytes(20).toString("hex")
+    this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex")
+    this.resetPasswordExpire = Date.now() + 10 * (60 * 1000)
+    return resetToken
 }
 
 const user = model('user', userSchema)

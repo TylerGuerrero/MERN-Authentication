@@ -9,7 +9,7 @@ import cors from 'cors'
 import AuthRoutes from './routes/AuthRoutes.js'
 import PrivateRoutes from './routes/PrivateRoutes.js'
 
-// middleware
+// Middleware
 import { errorHandler } from './middleware/Error.js'
 import { authCheck } from './middleware/Auth.js'
 
