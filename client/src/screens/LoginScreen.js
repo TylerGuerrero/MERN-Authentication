@@ -63,10 +63,19 @@ const LoginScreen = () => {
                     placeholder="Enter Email"
                     value={formInputs.email}
                     onChange={(e) => handleChange(e)}
+                    tabIndex={1}
                     />
                 </div>  
                 <div className="form-group">
-                    <label htmlFor="password">Password: </label>
+                    <label htmlFor="password">Password: 
+                        <Link 
+                        to="/forgotpassword" 
+                        className="login-screen__forgotpassword"
+                        tabIndex={4}
+                        >
+                            Forgot Password ?
+                        </Link>
+                    </label>
                     <input 
                     id="password"
                     name="password"
@@ -75,6 +84,7 @@ const LoginScreen = () => {
                     placeholder="Enter Password"
                     value={formInputs.password}
                     onChange={(e) => handleChange(e)}
+                    tabIndex={2}
                     />
                 </div>  
                 <div className="form-group">
@@ -87,6 +97,7 @@ const LoginScreen = () => {
                     name="confirmedPassword"
                     value={formInputs.confirmPassword}
                     onChange={(e) => handleChange(e)}
+                    tabIndex={3}
                     />
                 </div>  
                 <button type="submit" className="btn btn-primary">Login</button>
